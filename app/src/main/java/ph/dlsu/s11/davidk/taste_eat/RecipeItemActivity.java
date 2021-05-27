@@ -35,8 +35,8 @@ public class RecipeItemActivity extends AppCompatActivity {
     private ImageView img_recipe, img_like, img_save, img_ingredients, img_instructions;
 
     private Intent intent = getIntent();
-    private String str_name, str_ingredients, str_instructions, str_img_recipe;
-    private int likes, instructionsVisible = 0, ingredientsVisible = 0;
+    private String str_name, str_ingredients, str_instructions, str_img_recipe, strId, temp;
+    private int likes, instructionsVisible = 0, ingredientsVisible = 0, isSaved = 0;
 
     // initialize cloud firestore
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -92,17 +92,22 @@ public class RecipeItemActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("TAG", document.getId() + " => " + document.getData());
+
+                                //if user bookmarked
                                 if(str_user_email.equals(document.getString("email"))){
-                                    if(str_name.equals(document.getString("recipes"))){
-                                        img_save.setImageResource(R.drawable.ic_baseline_bookmark_24);
+
+                                    // if many bookmark
+                                    String recipe[] = document.getString("recipes").split(",");
+                                    for(int i=0; i<recipe.length; i++){
+                                        if(str_name.equals(recipe[i])){
+                                            img_save.setImageResource(R.drawable.ic_baseline_bookmark_24);
+                                            isSaved = 1;
+                                        }
                                     }
                                 }
-
-
                             }
                         } else {
                             Log.w("TAG", "Error getting documents.", task.getException());
@@ -128,34 +133,132 @@ public class RecipeItemActivity extends AppCompatActivity {
         img_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                img_save.setImageResource(R.drawable.ic_baseline_bookmark_24);
 
-                //create new map object to send data to the db
-                Map<String, Object> bookmark = new HashMap<>();
+                if(isSaved == 0){ //not yet saved, create new
+                    img_save.setImageResource(R.drawable.ic_baseline_bookmark_24);
 
-                //add data to map
-                bookmark.put("email", str_user_email);
-                bookmark.put("recipes", str_name);
+                    db.collection("bookmarks")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("TAG", document.getId() + " => " + document.getData());
+                                            //if user bookmarked
+                                            if(str_user_email.equals(document.getString("email"))){
+                                                strId = document.getId();
+                                                // if existing bookmark for user
+                                                temp = "";
+                                                if(document.getString("recipes").equals("")){
+                                                    temp = temp.concat(str_name);
+                                                }
+                                                else{
+                                                    temp = temp.concat(document.getString("recipes"));
+                                                    temp = temp.concat(","+str_name);
+                                                }
 
-                //add new document with generated ID
-                //remember model of firestore: Data -> Document -> Collection
-                db.collection("bookmarks")
-                        .add(bookmark)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                //Execute when data is successfully inserted to database
-                                Log.d("TAG", "inserted success");
-//                                                System.exit(0);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                //Execute when data is not successfully inserted to database
-                                Log.d("TAG", "error insert fail");
-                            }
-                        });
+                                                //create new map object to send data to the db
+                                                Map<String, Object> bookmark = new HashMap<>();
+
+                                                //add data to map
+                                                bookmark.put("email", str_user_email);
+                                                bookmark.put("recipes", temp);
+
+                                                //update
+                                                db.collection("bookmarks")
+                                                        .document(strId).set(bookmark);
+                                                isSaved=1;
+                                            }
+                                        }
+
+                                        if(isSaved == 0){
+                                            //create new map object to send data to the db
+                                            Map<String, Object> bookmark = new HashMap<>();
+
+                                            //add data to map
+                                            bookmark.put("email", str_user_email);
+                                            bookmark.put("recipes", str_name);
+
+                                            //add new document with generated ID
+                                            db.collection("bookmarks")
+                                                    .add(bookmark)
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference documentReference) {
+                                                            //Execute when data is successfully inserted to database
+                                                            Log.d("TAG", "inserted success");
+                                                            isSaved=1;
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            //Execute when data is not successfully inserted to database
+                                                            Log.d("TAG", "error insert fail");
+                                                        }
+                                                    });
+                                        }
+
+                                    } else {
+                                        Log.w("TAG", "Error getting documents.", task.getException());
+                                    }
+                                }
+                            });
+
+
+                }
+                else{ //unsave
+                    img_save.setImageResource(R.drawable.ic_baseline_bookmark_border_24);
+
+                    db.collection("bookmarks")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("TAG", document.getId() + " => " + document.getData());
+                                            //if user bookmarked
+                                            if(str_user_email.equals(document.getString("email"))){
+                                                strId = document.getId();
+                                                // if many bookmark
+                                                String recipe[] = document.getString("recipes").split(",");
+                                                temp = "";
+                                                for(int i=0; i<recipe.length; i++){
+                                                    if(!str_name.equals(recipe[i])){
+                                                        if(temp.equals("")){
+                                                            temp = temp.concat(recipe[i]);
+                                                        }
+                                                        else{
+                                                            temp = temp.concat("," + recipe[i]);
+                                                        }
+                                                        Log.d("TAGS", "recipes: " +temp);
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        //create new map object to send data to the db
+                                        Map<String, Object> bookmark = new HashMap<>();
+
+                                        //add data to map
+                                        bookmark.put("email", str_user_email);
+                                        bookmark.put("recipes", temp);
+
+                                        //update
+                                        db.collection("bookmarks")
+                                                .document(strId).set(bookmark);
+                                        isSaved=0;
+                                    } else {
+                                        Log.w("TAG", "Error getting documents.", task.getException());
+                                    }
+                                }
+                            });
+
+                }
+
+
 
                 Toast.makeText(getApplicationContext(), "SAVE CLICK" , Toast.LENGTH_SHORT).show();
 

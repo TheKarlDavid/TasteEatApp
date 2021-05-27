@@ -74,7 +74,11 @@ public class MostLikedFragment extends Fragment {
         rv_list = view.findViewById(R.id.rv_list_recipes);
         rv_list.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        Query query = db.collection("recipes").whereGreaterThan("likes", 0).orderBy("likes", Query.Direction.DESCENDING).limit(8);
+        Query query = db.collection("recipes")
+                .whereEqualTo("cuisine", str_cuisine_name)
+                .whereGreaterThan("likes", 0)
+                .orderBy("likes", Query.Direction.DESCENDING)
+                .limit(8);
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

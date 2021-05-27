@@ -65,4 +65,12 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public ArrayList<String> getSaved_recipes() {
+        return saved_recipes;
+    }
+
+    public void setSaved_recipes(ArrayList<String> saved_recipes) {
+        this.saved_recipes = saved_recipes;
+    }
 }

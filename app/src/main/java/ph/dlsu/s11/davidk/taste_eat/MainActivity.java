@@ -11,6 +11,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText et_email, et_password;
     private TextView tv_login, tv_register;
     private TextInputLayout textInputEmail, textInputPassword;
+    private CheckBox cb_remember;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor EDITOR;
 
@@ -35,7 +37,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkLogin();
+
         init();
+    }
+
+    private void checkLogin(){
+
+        sharedPreferences = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
+        String str_user_email = sharedPreferences.getString("logged_in", null);
+
+        if(str_user_email != null){
+            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     private void init(){
@@ -45,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         tv_register = findViewById(R.id.tv_register);
         textInputEmail = findViewById(R.id.textInputEmail);
         textInputPassword = findViewById(R.id.textInputPassword);
+        cb_remember = findViewById(R.id.cb_remember);
 
         // initialize cloud firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -80,6 +97,11 @@ public class MainActivity extends AppCompatActivity {
                                             EDITOR.putString("user", document.getString("email"));
 //                                            EDITOR.clear();
                                             EDITOR.apply();
+
+                                            if(cb_remember.isChecked()){
+                                                EDITOR.putString("logged_in", document.getString("role"));
+                                                EDITOR.apply();
+                                            }
 
 
                                             Intent intent = new Intent(getApplicationContext(), HomeActivity.class);

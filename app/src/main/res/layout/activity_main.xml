@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="55dp"
             android:layout_marginRight="55dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="24dp"
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -65,7 +65,21 @@
                 android:textCursorDrawable="@drawable/cursor_color"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/cb_remember"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remember me"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/colorSecondary"
+            android:buttonTint="@color/colorSecondary"
+            android:fontFamily="@font/poppins_regular"/>
+
     </LinearLayout>
+    
+
 
     <TextView
         android:id="@+id/tv_login"
@@ -82,7 +96,8 @@
         android:paddingBottom="14dp"
         android:text="Login"
         android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold"/>
 
     <TextView
             android:id="@+id/tv_register"

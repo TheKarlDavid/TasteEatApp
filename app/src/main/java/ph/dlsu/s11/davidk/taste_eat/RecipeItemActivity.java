@@ -15,8 +15,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RecipeItemActivity extends AppCompatActivity {
 
@@ -26,6 +37,9 @@ public class RecipeItemActivity extends AppCompatActivity {
     private Intent intent = getIntent();
     private String str_name, str_ingredients, str_instructions, str_img_recipe;
     private int likes, instructionsVisible = 0, ingredientsVisible = 0;
+
+    // initialize cloud firestore
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     @Override
@@ -57,6 +71,9 @@ public class RecipeItemActivity extends AppCompatActivity {
         str_img_recipe = getIntent().getStringExtra("image");
         likes = getIntent().getIntExtra("likes", 0);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
+        String str_user_email = sharedPreferences.getString("user", null);
+
         tv_name.setText(str_name);
         Picasso.get().load(str_img_recipe).into(img_recipe);
 
@@ -70,10 +87,81 @@ public class RecipeItemActivity extends AppCompatActivity {
             tv_likes.setVisibility(View.GONE);
         }
 
+        db.collection("bookmarks")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG", document.getId() + " => " + document.getData());
+                                if(str_user_email.equals(document.getString("email"))){
+                                    if(str_name.equals(document.getString("recipes"))){
+                                        img_save.setImageResource(R.drawable.ic_baseline_bookmark_24);
+                                    }
+                                }
+
+
+                            }
+                        } else {
+                            Log.w("TAG", "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
 //        SharedPreferences sp = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
 //        String user = sp.getString("user", "default");
 //
 //        Log.d("TAG_USER", "User is:" +user);
+
+        img_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
+
+                Toast.makeText(getApplicationContext(), "LIKE CLICK" , Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        img_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                img_save.setImageResource(R.drawable.ic_baseline_bookmark_24);
+
+                //create new map object to send data to the db
+                Map<String, Object> bookmark = new HashMap<>();
+
+                //add data to map
+                bookmark.put("email", str_user_email);
+                bookmark.put("recipes", str_name);
+
+                //add new document with generated ID
+                //remember model of firestore: Data -> Document -> Collection
+                db.collection("bookmarks")
+                        .add(bookmark)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                //Execute when data is successfully inserted to database
+                                Log.d("TAG", "inserted success");
+//                                                System.exit(0);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                //Execute when data is not successfully inserted to database
+                                Log.d("TAG", "error insert fail");
+                            }
+                        });
+
+                Toast.makeText(getApplicationContext(), "SAVE CLICK" , Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
 
         img_ingredients.setOnClickListener(new View.OnClickListener() {
             @Override

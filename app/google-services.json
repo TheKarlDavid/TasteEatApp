@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "799882118302",
+    "project_id": "taste-eat-2899d",
+    "storage_bucket": "taste-eat-2899d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799882118302:android:29feb797619e61980c678f",
+        "android_client_info": {
+          "package_name": "ph.dlsu.s11.davidk.taste_eat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799882118302-s4h01tfm0qkjuhi57tunuv6c50l05fdr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvpB1P1wM1tsWzQcclpxz_QTmjQBGyFMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799882118302-s4h01tfm0qkjuhi57tunuv6c50l05fdr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

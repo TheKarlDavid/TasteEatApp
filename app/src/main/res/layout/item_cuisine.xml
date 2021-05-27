@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    android:id="@+id/item_order_cardview"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/colorPrimary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:id="@+id/img_cuisine"
+            android:src="@drawable/blue_bg"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="fitXY"
+            android:layout_marginTop="16dp"/>
+
+
+        <TextView
+            android:id="@+id/tv_cuisine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cuisine"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:fontFamily="@font/poppins_regular"
+            android:textColor="@color/colorSecondary"
+            android:background="@color/colorPrimaryLight"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:paddingLeft="32dp"/>
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

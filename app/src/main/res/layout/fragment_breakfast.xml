@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".BreakfastFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCategory"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_margin="12dp"
+                app:cardCornerRadius="10dp"
+                app:cardBackgroundColor="@color/colorSecondaryLight"
+                android:foreground="?attr/selectableItemBackground">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imageCategoryBg"
+                        android:src="@drawable/ic_baseline_wb_sunny_24"
+                        android:scaleType="centerCrop"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="0.9"
+                        android:background="#FAD02C" />
+
+                    <ImageView
+                        android:id="@+id/imageCategory"
+                        android:src="@drawable/ic_baseline_wb_sunny_24"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:scaleType="fitStart"
+                        android:padding="16dp"/>
+                    <TextView
+                        android:id="@+id/textCategory"
+                        android:layout_toRightOf="@id/imageCategory"
+                        android:layout_toEndOf="@id/imageCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="16dp"
+                        android:maxLines="7"
+                        android:ellipsize="end"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textSize="15sp"
+                        android:text="Breakfast is the first meal of the day eaten after waking up, usually in the morning. Start your day energized"
+                        android:gravity="center"/>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_list_recipes"
+                android:layout_below="@id/cardCategory"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/tv_no_recipes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No recipes yet, but stay tuned for the next delicious dish!"
+                android:fontFamily="@font/poppins_regular"
+                android:textSize="20sp"
+                android:textColor="@color/colorSecondary"
+                android:gravity="center"
+                android:layout_below="@+id/rv_list_recipes"
+                android:visibility="invisible"/>
+
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>

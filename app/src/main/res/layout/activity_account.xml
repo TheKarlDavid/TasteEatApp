@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".AccountActivity">
+
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="User account"
+        android:textColor="@color/colorSecondary"
+        android:background="@color/colorPrimaryLight"
+        android:fontFamily="@font/poppins_regular"
+        android:textAllCaps="true"
+        android:textSize="32dp"
+        android:padding="8dp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <ImageView
+        android:id="@+id/img_user"
+        android:src="@drawable/user_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="180dp"
+        android:layout_marginBottom="16dp"
+        android:background="#ffc48e"
+        android:layout_below="@id/tv_header"/>
+
+    <TextView
+        android:id="@+id/tv_email_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email address:"
+        android:fontFamily="@font/poppins_regular"
+        android:background="@color/colorPrimaryLight"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:textColor="@color/colorSecondary"
+        android:padding="16dp"
+        android:layout_below="@id/img_user"/>
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="example@email.com"
+        android:fontFamily="@font/poppins_regular"
+        android:background="@color/colorPrimaryLight"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:textColor="@color/colorSecondary"
+        android:padding="16dp"
+        android:layout_below="@id/tv_email_header"/>
+
+    <TextView
+        android:id="@+id/tv_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="55dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="55dp"
+        android:background="@drawable/primary_fill__rounded_color"
+        android:fontFamily="@font/poppins_medium"
+        android:gravity="center"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="Logout"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp"
+        android:layout_below="@id/tv_email"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_navigation"
+        android:background="@color/colorPrimaryLight"/>
+
+</RelativeLayout>

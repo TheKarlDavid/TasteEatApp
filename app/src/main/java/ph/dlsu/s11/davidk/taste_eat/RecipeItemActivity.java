@@ -155,6 +155,11 @@ public class RecipeItemActivity extends AppCompatActivity {
                                 LikedActivity.class));
                         overridePendingTransition(0,0);
                         return true;
+                    case R.id.nav_account:
+                        startActivity(new Intent(getApplicationContext(),
+                                AccountActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
                 }
                 return false;
             }

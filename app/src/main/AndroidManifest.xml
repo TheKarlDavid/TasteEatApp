@@ -11,19 +11,22 @@
         android:roundIcon="@mipmap/taste_eat_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TasteEat">
-        <activity android:name=".RecipeItemActivity"/>
+        <activity android:name=".AccountActivity"></activity>
+        <activity android:name=".RecipeItemActivity" />
         <activity android:name=".RecipesActivity" />
         <activity android:name=".LikedActivity" />
         <activity android:name=".SavedActivity" />
         <activity android:name=".HomeActivity">
+
+        </activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

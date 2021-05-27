@@ -44,6 +44,11 @@ public class LikedActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_favorites:
                         return true;
+                    case R.id.nav_account:
+                        startActivity(new Intent(getApplicationContext(),
+                                AccountActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
                 }
                 return false;
             }

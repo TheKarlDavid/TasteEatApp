@@ -11,9 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,8 +33,8 @@ public class RecipeItemActivity extends AppCompatActivity {
     private ImageView img_recipe, img_like, img_save, img_ingredients, img_instructions;
 
     private Intent intent = getIntent();
-    private String str_name, str_ingredients, str_instructions, str_img_recipe, strId, temp;
-    private int likes, instructionsVisible = 0, ingredientsVisible = 0, isSaved = 0;
+    private String str_name, str_ingredients, str_instructions, str_img_recipe, str_meal, str_cuisine, strId, temp;
+    private int likes, instructionsVisible = 0, ingredientsVisible = 0, isSaved = 0, isLiked = 0;
 
     // initialize cloud firestore
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -69,6 +67,8 @@ public class RecipeItemActivity extends AppCompatActivity {
         str_ingredients = getIntent().getStringExtra("ingredients");
         str_instructions = getIntent().getStringExtra("instructions");
         str_img_recipe = getIntent().getStringExtra("image");
+        str_meal = getIntent().getStringExtra("meal");
+        str_cuisine = getIntent().getStringExtra("cuisine");
         likes = getIntent().getIntExtra("likes", 0);
 
         SharedPreferences sharedPreferences = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
@@ -77,16 +77,38 @@ public class RecipeItemActivity extends AppCompatActivity {
         tv_name.setText(str_name);
         Picasso.get().load(str_img_recipe).into(img_recipe);
 
-        if(likes == 1){
-            tv_likes.setText(String.valueOf(likes) + " like");
-        }
-        else if(likes > 1){
-            tv_likes.setText(String.valueOf(likes) + " likes");
-        }
-        else{
-            tv_likes.setVisibility(View.GONE);
-        }
+        setTv_likes();
 
+        //Check is user has already liked recipe
+        db.collection("likes")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG", document.getId() + " => " + document.getData());
+
+                                //if user bookmarked
+                                if(str_user_email.equals(document.getString("email"))){
+
+                                    // if many bookmark
+                                    String recipe[] = document.getString("recipes").split(",");
+                                    for(int i=0; i<recipe.length; i++){
+                                        if(str_name.equals(recipe[i])){
+                                            img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
+                                            isLiked = 1;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            Log.w("TAG", "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
+        //Check is user has already bookmarked recipe
         db.collection("bookmarks")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -115,21 +137,212 @@ public class RecipeItemActivity extends AppCompatActivity {
                     }
                 });
 
-//        SharedPreferences sp = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
-//        String user = sp.getString("user", "default");
-//
-//        Log.d("TAG_USER", "User is:" +user);
-
+        //LIKE
         img_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
 
-                Toast.makeText(getApplicationContext(), "LIKE CLICK" , Toast.LENGTH_SHORT).show();
+                if(isLiked == 0){ //not yet saved, create new
+                    img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
 
+                    //add like
+                    db.collection("recipes")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("TAG", document.getId() + " => " + document.getData());
+                                            strId = document.getId();
+                                            if(str_name.equals(document.getString("name"))){
+
+                                                //create new map object to send data to the db
+                                                Map<String, Object> recipeLikes = new HashMap<>();
+                                                likes = likes + 1;
+                                                //add data to map
+                                                recipeLikes.put("name", str_name);
+                                                recipeLikes.put("Image", str_img_recipe);
+                                                recipeLikes.put("ingredients", str_ingredients);
+                                                recipeLikes.put("instructions", str_instructions);
+                                                recipeLikes.put("cuisine", str_cuisine);
+                                                recipeLikes.put("meal", str_meal);
+                                                recipeLikes.put("likes", likes);
+                                                db.collection("recipes")
+                                                        .document(strId).set(recipeLikes);
+
+                                                Log.d("TAG_SAVE", "LIKES++: "+likes);
+                                            }
+                                        }
+                                        setTv_likes();
+                                    } else {
+                                        Log.w("TAG", "Error getting documents.", task.getException());
+                                    }
+                                }
+                            });
+
+                    //check likes collection
+                    db.collection("likes")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("TAG", document.getId() + " => " + document.getData());
+                                            //if user liked
+                                            if(str_user_email.equals(document.getString("email"))){
+                                                strId = document.getId();
+                                                // if existing like for user
+                                                temp = "";
+                                                if(document.getString("recipes").equals("")){
+                                                    temp = temp.concat(str_name);
+                                                }
+                                                else{
+                                                    temp = temp.concat(document.getString("recipes"));
+                                                    temp = temp.concat(","+str_name);
+                                                }
+
+                                                //create new map object to send data to the db
+                                                Map<String, Object> like = new HashMap<>();
+
+                                                //add data to map
+                                                like.put("email", str_user_email);
+                                                like.put("recipes", temp);
+
+                                                //update
+                                                db.collection("likes")
+                                                        .document(strId).set(like);
+                                                isLiked=1;
+                                            }
+                                        }
+
+                                        if(isLiked == 0){
+                                            //create new map object to send data to the db
+                                            Map<String, Object> like = new HashMap<>();
+
+                                            //add data to map
+                                            like.put("email", str_user_email);
+                                            like.put("recipes", str_name);
+
+                                            //add new document with generated ID
+                                            db.collection("likes")
+                                                    .add(like)
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference documentReference) {
+                                                            //Execute when data is successfully inserted to database
+                                                            Log.d("TAG", "inserted success");
+                                                            isSaved=1;
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            //Execute when data is not successfully inserted to database
+                                                            Log.d("TAG", "error insert fail");
+                                                        }
+                                                    });
+                                        }
+
+                                    } else {
+                                        Log.w("TAG", "Error getting documents.", task.getException());
+                                    }
+                                }
+                            });
+
+
+                }
+                else{ //unike
+                    img_like.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+
+                    //minus like
+                    db.collection("recipes")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("TAG", document.getId() + " => " + document.getData());
+                                            strId = document.getId();
+                                            if(str_name.equals(document.getString("name"))){
+                                                Log.d("TAG_SAVE", document.getString("name"));
+                                                //create new map object to send data to the db
+                                                Map<String, Object> recipeLikes = new HashMap<>();
+                                                likes = likes - 1;
+                                                //add data to map
+                                                recipeLikes.put("name", str_name);
+                                                recipeLikes.put("Image", str_img_recipe);
+                                                recipeLikes.put("ingredients", str_ingredients);
+                                                recipeLikes.put("instructions", str_instructions);
+                                                recipeLikes.put("cuisine", str_cuisine);
+                                                recipeLikes.put("meal", str_meal);
+                                                recipeLikes.put("likes", likes);
+                                                db.collection("recipes")
+                                                        .document(strId).set(recipeLikes);
+
+                                                Log.d("TAG_SAVE", "LIKES--: "+likes);
+                                            }
+                                        }
+
+                                        setTv_likes();
+                                    } else {
+                                        Log.w("TAG", "Error getting documents.", task.getException());
+                                    }
+                                }
+                            });
+
+                    db.collection("likes")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            Log.d("TAG", document.getId() + " => " + document.getData());
+                                            //if user liked
+                                            if(str_user_email.equals(document.getString("email"))){
+                                                strId = document.getId();
+                                                // if many likes
+                                                String recipe[] = document.getString("recipes").split(",");
+                                                temp = "";
+                                                for(int i=0; i<recipe.length; i++){
+                                                    if(!str_name.equals(recipe[i])){
+                                                        if(temp.equals("")){
+                                                            temp = temp.concat(recipe[i]);
+                                                        }
+                                                        else{
+                                                            temp = temp.concat("," + recipe[i]);
+                                                        }
+                                                        Log.d("TAGS", "recipes: " +temp);
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        //create new map object to send data to the db
+                                        Map<String, Object> like = new HashMap<>();
+
+                                        //add data to map
+                                        like.put("email", str_user_email);
+                                        like.put("recipes", temp);
+
+                                        //update
+                                        db.collection("likes")
+                                                .document(strId).set(like);
+                                        isLiked=0;
+                                    } else {
+                                        Log.w("TAG", "Error getting documents.", task.getException());
+                                    }
+                                }
+                            });
+
+                }
             }
         });
 
+        //BOOKMARK
         img_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +383,7 @@ public class RecipeItemActivity extends AppCompatActivity {
                                                         .document(strId).set(bookmark);
                                                 isSaved=1;
                                             }
+
                                         }
 
                                         if(isSaved == 0){
@@ -257,11 +471,6 @@ public class RecipeItemActivity extends AppCompatActivity {
                             });
 
                 }
-
-
-
-                Toast.makeText(getApplicationContext(), "SAVE CLICK" , Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -322,8 +531,18 @@ public class RecipeItemActivity extends AppCompatActivity {
         });
 
 
+    }
 
-
+    private void setTv_likes(){
+        if(likes == 1){
+            tv_likes.setText(String.valueOf(likes) + " like");
+        }
+        else if(likes > 1){
+            tv_likes.setText(String.valueOf(likes) + " likes");
+        }
+        else{
+            tv_likes.setVisibility(View.GONE);
+        }
     }
 
     private void navbar(){

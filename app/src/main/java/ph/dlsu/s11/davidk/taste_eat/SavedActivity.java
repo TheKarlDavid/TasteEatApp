@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -37,7 +38,6 @@ public class SavedActivity extends AppCompatActivity {
     private ArrayList<Recipes> bookmarkRecipesList = new ArrayList<>();
     private TextView tv_no_saved;
 
-
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
@@ -55,6 +55,9 @@ public class SavedActivity extends AppCompatActivity {
         rv_list = findViewById(R.id.rv_list);
         rv_list.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
 
+        SharedPreferences sharedPreferences = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
+        String str_user_email = sharedPreferences.getString("user", "default");
+
         db.collection("bookmarks")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -64,49 +67,47 @@ public class SavedActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("TAG", document.getId() + " => " + document.getData());
-                                String temp[] = document.getString("recipes").split(",");
+                                Log.d("TAG", document.getId() + " => " + document.getString("email"));
+                                Log.d("TAG", document.getId() + "STR => " + str_user_email);
 
-                                //search db for recipes that were bookmarked
-                                for(int i =0; i<temp.length; i++){
-                                    db.collection("recipes").whereEqualTo("name", temp[i]).get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                                            String str_name = document.getString("name");
-                                                            String str_image = document.getString("Image");
-                                                            String str_ingredients = document.getString("ingredients");
-                                                            String str_cuisine = document.getString("cuisine");
-                                                            String str_instructions = document.getString("instructions");
-                                                            String str_meal = document.getString("meal");
-                                                            int likes = document.getLong("likes").intValue();
+                                if(str_user_email.equals(document.getString("email"))){
+                                    String temp[] = document.getString("recipes").split(",");
 
-                                                            Recipes recipe = new Recipes(str_name, str_image, str_ingredients, str_cuisine, str_instructions, str_meal, likes);
-                                                            bookmarkRecipesList.add(recipe);
+                                    //search db for recipes that were bookmarked
+                                    for(int i =0; i<temp.length; i++){
+                                        db.collection("recipes").whereEqualTo("name", temp[i]).get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                String str_name = document.getString("name");
+                                                                String str_image = document.getString("Image");
+                                                                String str_ingredients = document.getString("ingredients");
+                                                                String str_cuisine = document.getString("cuisine");
+                                                                String str_instructions = document.getString("instructions");
+                                                                String str_meal = document.getString("meal");
+                                                                int likes = document.getLong("likes").intValue();
 
-                                                            Log.d("TAG", "RECP BM: "+ recipe.getName() + " " + recipe.getImage() + " "+bookmarkRecipesList);
+                                                                Recipes recipe = new Recipes(str_name, str_image, str_ingredients, str_cuisine, str_instructions, str_meal, likes);
+                                                                bookmarkRecipesList.add(recipe);
 
-                                                            adapter = new RecipesSavedAdapter(getApplicationContext(), bookmarkRecipesList);
-                                                            rv_list.setAdapter(adapter);
+                                                                Log.d("TAG", "RECP BM: "+ recipe.getName() + " " + recipe.getImage() + " "+bookmarkRecipesList);
 
+                                                                adapter = new RecipesSavedAdapter(getApplicationContext(), bookmarkRecipesList);
+                                                                rv_list.setAdapter(adapter);
+
+                                                            }
+                                                        } else {
+                                                            Log.d("TAG", "Error getting documents: ", task.getException());
                                                         }
-                                                    } else {
-                                                        Log.d("TAG", "Error getting documents: ", task.getException());
                                                     }
-                                                }
-                                            });
+                                                });
+                                    }
+
                                 }
 
-//                                adapter = new RecipesSavedAdapter(getApplicationContext(), bookmarkRecipesList);
-//                                rv_list.setAdapter(adapter);
 
-
-
-//                                if(document.getString("recipes")){
-//
-//
-//                                }
 
                             }
                         } else {
@@ -114,32 +115,6 @@ public class SavedActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-//        Query query = db.collection("recipes")
-//                .whereEqualTo("cuisine", str_cuisine_name)
-//                .whereGreaterThan("likes", 0)
-//                .orderBy("likes", Query.Direction.DESCENDING)
-//                .limit(8);
-//
-//        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if(task.getResult().isEmpty()){
-//                    Log.d("TAGS ONCREATEVIEW: ", "task: "+ task.getResult().isEmpty());
-//                    tv_no_saved.setVisibility(view.VISIBLE);
-//                }
-//
-//            }
-//        });
-
-//        FirestoreRecyclerOptions<Recipes> recipes = new FirestoreRecyclerOptions.Builder<Recipes>()
-//                .setQuery(query, Recipes.class)
-//                .build();
-
-
-
-//        adapter = new RecipesAdapter(recipes);
-//        rv_list.setAdapter(adapter);
 
 
     }

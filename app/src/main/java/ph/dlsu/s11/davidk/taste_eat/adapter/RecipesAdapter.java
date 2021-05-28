@@ -42,6 +42,8 @@ public class RecipesAdapter extends FirestoreRecyclerAdapter <Recipes, RecipesAd
                 String str_image = model.getImage();
                 String str_ingredients = model.getIngredients();
                 String str_instructions = model.getInstructions();
+                String str_cuisine = model.getCuisine();
+                String str_meal = model.getMeal();
                 int likes = model.getLikes();
 
                 Intent intent = new Intent(context, RecipeItemActivity.class);
@@ -50,6 +52,8 @@ public class RecipesAdapter extends FirestoreRecyclerAdapter <Recipes, RecipesAd
                 intent.putExtra("image", str_image);
                 intent.putExtra("ingredients", str_ingredients);
                 intent.putExtra("instructions", str_instructions);
+                intent.putExtra("cuisine", str_cuisine);
+                intent.putExtra("meal", str_meal);
                 intent.putExtra("likes", likes);
 
                 v.getContext().startActivity(intent);

@@ -71,7 +71,7 @@
                 android:id="@+id/tv_no_recipes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No recipes yet, but stay tuned for the next delicious dish!"
+                android:text="No recipes liked by the community yet, so stay tuned"
                 android:fontFamily="@font/poppins_regular"
                 android:textSize="20sp"
                 android:textColor="@color/colorSecondary"

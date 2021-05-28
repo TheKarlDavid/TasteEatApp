@@ -16,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AccountActivity extends AppCompatActivity {
 
-    private TextView tv_email, tv_logout;
+    private TextView tv_name, tv_email, tv_logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +29,18 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     private void init(){
+        tv_name = findViewById(R.id.tv_name);
         tv_email = findViewById(R.id.tv_email);
         tv_logout = findViewById(R.id.tv_logout);
 
         SharedPreferences sp = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
         String str_user_email = sp.getString("user", "default");
+        String str_user_name = sp.getString("name", "default");
+
 
         Log.d("TAGS", "user" + str_user_email);
 
+        tv_name.setText(str_user_name);
         tv_email.setText(str_user_email);
 
         tv_logout.setOnClickListener(new View.OnClickListener() {

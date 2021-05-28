@@ -88,14 +88,14 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d("TAG", document.getId() + " => " + document.getData());
                                         if(str_email.equals(document.getString("email")) && str_password.equals(document.getString("password"))){
 
-                                            Toast.makeText(getApplicationContext(),
-                                                    "email match: " + document.getString("email") + "and" + document.getString("password"), Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getApplicationContext(),
+//                                                    "email match: " + document.getString("email") + "and" + document.getString("password"), Toast.LENGTH_SHORT).show();
 
                                             //for shared preferences
                                             sharedPreferences = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
                                             EDITOR = sharedPreferences.edit();
                                             EDITOR.putString("user", document.getString("email"));
-//                                            EDITOR.clear();
+                                            EDITOR.putString("name", document.getString("first_name") + " " + document.getString("last_name") );
                                             EDITOR.apply();
 
                                             if(cb_remember.isChecked()){
@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
 
                                             textInputEmail.setError("Incorrect Email or Password");
                                             textInputPassword.setError("Incorrect Email or Password");
-                                            Toast.makeText(getApplicationContext(),
-                                                    "email do not match", Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getApplicationContext(),
+//                                                    "email do not match", Toast.LENGTH_SHORT).show();
                                         }
 
                                     }

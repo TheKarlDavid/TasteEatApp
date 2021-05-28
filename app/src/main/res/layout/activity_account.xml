@@ -18,47 +18,79 @@
         android:textAllCaps="true"
         android:textSize="32dp"
         android:padding="8dp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/img_user"
-        android:src="@drawable/user_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="180dp"
-        android:layout_marginBottom="16dp"
-        android:background="#ffc48e"
-        android:layout_below="@id/tv_header"/>
-
-    <TextView
-        android:id="@+id/tv_email_header"
+    <RelativeLayout
+        android:id="@+id/rl_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email address:"
-        android:fontFamily="@font/poppins_regular"
-        android:background="@color/colorPrimaryLight"
-        android:layout_alignParentLeft="true"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textAlignment="center"
-        android:textColor="@color/colorSecondary"
-        android:padding="16dp"
-        android:layout_below="@id/img_user"/>
+        android:background="@drawable/gradient"
+        android:layout_below="@id/tv_header">
 
-    <TextView
-        android:id="@+id/tv_email"
+        <ImageView
+            android:id="@+id/img_user"
+            android:src="@drawable/user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Firstname Lastname"
+            android:fontFamily="@font/poppins_regular"
+            android:layout_alignParentLeft="true"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:textColor="@color/colorSecondary"
+            android:padding="16dp"
+            android:layout_below="@id/img_user"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="example@email.com"
-        android:fontFamily="@font/poppins_regular"
-        android:background="@color/colorPrimaryLight"
-        android:layout_alignParentLeft="true"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textAlignment="center"
-        android:textColor="@color/colorSecondary"
+        android:layout_below="@id/rl_profile"
+        android:layout_marginTop="8dp"
         android:padding="16dp"
-        android:layout_below="@id/tv_email_header"/>
+        android:background="@color/colorPrimaryLight"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_email_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:fontFamily="@font/poppins_regular"
+            android:layout_alignParentLeft="true"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/colorSecondary" />
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="example@email.com"
+            android:fontFamily="@font/poppins_regular"
+            android:layout_alignParentLeft="true"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/colorSecondary" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/colorSecondary"/>
+
+    </LinearLayout>
+
+
 
     <TextView
         android:id="@+id/tv_logout"
@@ -76,7 +108,7 @@
         android:text="Logout"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
-        android:layout_below="@id/tv_email"/>
+        android:layout_below="@id/ll_email"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

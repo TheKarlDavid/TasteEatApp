@@ -3,7 +3,9 @@ package ph.dlsu.s11.davidk.taste_eat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -16,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,6 +38,9 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView tv_signup;
     private TextInputLayout textInputFirstName, textInputLastName, textInputEmail, textInputPassword, textInputPasswordConfirm;
     private int isExistingEmail;
+
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor EDITOR;
 
     // initialize cloud firestore
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -115,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 if(inputEmail[0].equals(DBemail[0])){
                                     //   System.out.println("I am the same email!!!!");
                                     isExistingEmail = 1;
-                                    Toast.makeText(getApplicationContext(), "EXIST E " , Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getApplicationContext(), "EXIST E " , Toast.LENGTH_SHORT).show();
                                     break;
                                 }
                             }
@@ -143,7 +149,17 @@ public class RegisterActivity extends AppCompatActivity {
                                             public void onSuccess(DocumentReference documentReference) {
                                                 //Execute when data is successfully inserted to database
                                                 Log.d("tag", "inserted success");
-                                                Toast.makeText(getApplicationContext(), "Account successfully created", Toast.LENGTH_SHORT).show();
+//                                                Toast.makeText(getApplicationContext(), "Account successfully created", Toast.LENGTH_SHORT).show();
+
+                                                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content) ,
+                                                        "ACCOUNT SUCCESSFULLY CREATED", Snackbar.LENGTH_LONG).show();
+                                                //for shared preferences
+                                                sharedPreferences = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
+                                                EDITOR = sharedPreferences.edit();
+                                                EDITOR.putString("user", et_email.getText().toString());
+                                                EDITOR.putString("name", et_first_name.getText().toString() + " " + et_last_name.getText().toString());
+                                                EDITOR.apply();
+
                                                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                                 startActivity(intent);
                                                 finish();
@@ -192,7 +208,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean validateEmail() {
-        Toast.makeText(getApplicationContext(), "validateEmail", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), "validateEmail", Toast.LENGTH_SHORT).show();
         String str_email = et_email.getText().toString();
 
         if (str_email.isEmpty()) {

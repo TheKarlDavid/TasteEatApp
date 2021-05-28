@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -115,8 +114,6 @@ public class SavedActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
     }
 
     private void navbar(){

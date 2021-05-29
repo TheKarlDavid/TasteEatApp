@@ -149,10 +149,10 @@ public class RegisterActivity extends AppCompatActivity {
                                             public void onSuccess(DocumentReference documentReference) {
                                                 //Execute when data is successfully inserted to database
                                                 Log.d("tag", "inserted success");
-//                                                Toast.makeText(getApplicationContext(), "Account successfully created", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getApplicationContext(), "Account successfully created", Toast.LENGTH_SHORT).show();
 
-                                                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content) ,
-                                                        "ACCOUNT SUCCESSFULLY CREATED", Snackbar.LENGTH_LONG).show();
+//                                                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content) ,
+//                                                        "ACCOUNT SUCCESSFULLY CREATED", Snackbar.LENGTH_LONG).show();
                                                 //for shared preferences
                                                 sharedPreferences = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
                                                 EDITOR = sharedPreferences.edit();

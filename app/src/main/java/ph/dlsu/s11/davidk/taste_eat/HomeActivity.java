@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,8 +23,10 @@ import ph.dlsu.s11.davidk.taste_eat.model.CuisineList;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private RecyclerView rv_list;
+    private RecyclerView rv_list, rv_list_admin;
     private CuisineAdapter adapter;
+
+    private LinearLayout ll_add_cuisine;
 
     private String str_role;
 
@@ -35,22 +38,18 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        SharedPreferences sp = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
-        str_role = sp.getString("role", "default");
-
-        if(str_role.equalsIgnoreCase("admin")){
-            navbarAdmin();
-        }
-        else{
-            navbar();
-        }
-
         init();
 
     }
 
     private void init(){
+
         rv_list = findViewById(R.id.rv_list);
+        rv_list_admin = findViewById(R.id.rv_list_admin);
+        ll_add_cuisine = findViewById(R.id.ll_add_cuisine);
+
+        SharedPreferences sp = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
+        str_role = sp.getString("role", "default");
 
         //query
         Query query = db.collection("cuisines");
@@ -62,9 +61,30 @@ public class HomeActivity extends AppCompatActivity {
 
         adapter = new CuisineAdapter(cuisines);
 
-        rv_list.setHasFixedSize(true);
-        rv_list.setLayoutManager(new LinearLayoutManager(this));
-        rv_list.setAdapter(adapter);
+        if(str_role.equalsIgnoreCase("admin")){
+            ll_add_cuisine.setVisibility(View.VISIBLE);
+
+            rv_list.setVisibility(View.GONE);
+            rv_list_admin.setVisibility(View.VISIBLE);
+
+            rv_list_admin.setHasFixedSize(true);
+            rv_list_admin.setLayoutManager(new LinearLayoutManager(this));
+            rv_list_admin.setAdapter(adapter);
+
+            navbarAdmin();
+        }
+        else{
+            rv_list.setVisibility(View.VISIBLE);
+            rv_list_admin.setVisibility(View.GONE);
+
+            rv_list.setHasFixedSize(true);
+            rv_list.setLayoutManager(new LinearLayoutManager(this));
+            rv_list.setAdapter(adapter);
+
+            navbar();
+        }
+
+
 
 
     }

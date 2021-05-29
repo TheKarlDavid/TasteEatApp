@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private void checkLogin(){
 
         sharedPreferences = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
-        String str_user_email = sharedPreferences.getString("logged_in", null);
+        String str_logged_in = sharedPreferences.getString("logged_in", null);
 
-        if(str_user_email != null){
+        if(str_logged_in != null){
             Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
             startActivity(intent);
         }
@@ -96,9 +96,10 @@ public class MainActivity extends AppCompatActivity {
                                             EDITOR = sharedPreferences.edit();
                                             EDITOR.putString("user", document.getString("email"));
                                             EDITOR.putString("name", document.getString("first_name") + " " + document.getString("last_name") );
+                                            EDITOR.putString("role", document.getString("role"));
                                             EDITOR.apply();
 
-                                            if(cb_remember.isChecked()){
+                                            if(cb_remember.isChecked()){ //check is user wants to remember log in
                                                 EDITOR.putString("logged_in", document.getString("role"));
                                                 EDITOR.apply();
                                             }

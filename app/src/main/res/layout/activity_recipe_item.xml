@@ -190,6 +190,15 @@
         android:background="@color/colorPrimaryLight"
         app:menu="@menu/bottom_navigation" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryLight"
+        app:menu="@menu/bottom_navigation_admin"
+        android:visibility="gone"/>
+
 
 
 </RelativeLayout>

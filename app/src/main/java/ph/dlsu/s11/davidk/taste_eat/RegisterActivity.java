@@ -158,6 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 EDITOR = sharedPreferences.edit();
                                                 EDITOR.putString("user", et_email.getText().toString());
                                                 EDITOR.putString("name", et_first_name.getText().toString() + " " + et_last_name.getText().toString());
+                                                EDITOR.putString("role", "user");
                                                 EDITOR.apply();
 
                                                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);

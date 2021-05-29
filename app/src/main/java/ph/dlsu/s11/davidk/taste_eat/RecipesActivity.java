@@ -13,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -39,15 +40,24 @@ public class RecipesActivity extends AppCompatActivity {
     private LunchFragment lunchFragment;
     private DinnerFragment dinnerFragment;
 
-    private String str_cuisine_name;
+    private String str_cuisine_name, str_role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes);
 
+        SharedPreferences sp = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
+        str_role = sp.getString("role", "default");
+
+        if(str_role.equalsIgnoreCase("admin")){
+            navbarAdmin();
+        }
+        else{
+            navbar();
+        }
+
         init();
-        navbar();
 
     }
 
@@ -100,6 +110,37 @@ public class RecipesActivity extends AppCompatActivity {
                     case R.id.nav_favorites:
                         startActivity(new Intent(getApplicationContext(),
                                 LikedActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_account:
+                        startActivity(new Intent(getApplicationContext(),
+                                AccountActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void navbarAdmin(){
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavAdmin = findViewById(R.id.bottom_navigation_admin);
+
+        bottomNav.setVisibility(View.GONE);
+        bottomNavAdmin.setVisibility(View.VISIBLE);
+
+        bottomNavAdmin.setSelectedItemId(R.id.nav_menu_book);
+        bottomNavAdmin.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.nav_menu_book:
+                        return true;
+
+                    case R.id.nav_suggestion:
+                        startActivity(new Intent(getApplicationContext(),
+                                SuggestionActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.nav_account:

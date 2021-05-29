@@ -66,25 +66,17 @@
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_navigation"
-        android:background="@color/colorPrimaryLight"/>
+        android:background="@color/colorPrimaryLight" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/tv_header"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginLeft="16dp"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Recipes Category"-->
-<!--        android:textColor="@color/colorSecondary"-->
-<!--        android:textAllCaps="true"-->
-<!--        android:textSize="32dp"-->
-<!--        android:textStyle="bold"/>-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryLight"
+        app:menu="@menu/bottom_navigation_admin"
+        android:visibility="gone"/>
 
-<!--    <TextView-->
-<!--        android:id="@+id/name"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:text="CUISINE"-->
-<!--        android:textSize="32dp"/>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

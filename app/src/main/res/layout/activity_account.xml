@@ -20,95 +20,151 @@
         android:padding="8dp"
         android:textStyle="bold" />
 
-    <RelativeLayout
-        android:id="@+id/rl_profile"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/gradient"
-        android:layout_below="@id/tv_header">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_header"
+        android:layout_above="@id/bottom_navigation">
 
-        <ImageView
-            android:id="@+id/img_user"
-            android:src="@drawable/user_profile"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="180dp"
-            android:layout_marginTop="16dp"/>
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Firstname Lastname"
-            android:fontFamily="@font/poppins_regular"
-            android:layout_alignParentLeft="true"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:textColor="@color/colorSecondary"
-            android:padding="16dp"
-            android:layout_below="@id/img_user"/>
+            android:layout_below="@id/tv_header">
 
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gradient">
 
-    <LinearLayout
-        android:id="@+id/ll_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_profile"
-        android:layout_marginTop="8dp"
-        android:padding="16dp"
-        android:background="@color/colorPrimaryLight"
-        android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/img_user"
+                    android:src="@drawable/user_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="16dp"/>
 
-        <TextView
-            android:id="@+id/tv_email_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            android:fontFamily="@font/poppins_regular"
-            android:layout_alignParentLeft="true"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="@color/colorSecondary" />
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Firstname Lastname"
+                    android:fontFamily="@font/poppins_regular"
+                    android:layout_alignParentLeft="true"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorSecondary"
+                    android:padding="16dp"
+                    android:layout_below="@id/img_user"/>
 
-        <TextView
-            android:id="@+id/tv_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="example@email.com"
-            android:fontFamily="@font/poppins_regular"
-            android:layout_alignParentLeft="true"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="@color/colorSecondary" />
+            </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/colorSecondary"/>
+            <LinearLayout
+                android:id="@+id/ll_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_profile"
+                android:layout_marginTop="8dp"
+                android:padding="16dp"
+                android:background="@color/colorPrimaryLight"
+                android:orientation="vertical">
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_email_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Email"
+                    android:fontFamily="@font/poppins_regular"
+                    android:layout_alignParentLeft="true"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorSecondary" />
+
+                <TextView
+                    android:id="@+id/tv_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="example@email.com"
+                    android:fontFamily="@font/poppins_regular"
+                    android:layout_alignParentLeft="true"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorSecondary" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/colorSecondary"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_suggestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ll_email"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:background="@color/colorPrimaryLight"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/et_suggestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:hint="Input a suggestion for a cuisine or food you want"
+                    android:layout_marginTop="8dp"
+                    android:padding="4dp"
+                    android:background="@color/colorPrimaryLight" />
+
+
+                <TextView
+                    android:id="@+id/tv_suggestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="55dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="55dp"
+                    android:background="@drawable/primary_fill__rounded_color"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:text="Suggest to Admin"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="55dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="55dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/primary_fill__rounded_color"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="Logout"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:layout_below="@id/ll_suggestion"/>
+
+        </RelativeLayout>
 
 
 
-    <TextView
-        android:id="@+id/tv_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="55dp"
-        android:background="@drawable/primary_fill__rounded_color"
-        android:fontFamily="@font/poppins_medium"
-        android:gravity="center"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:text="Logout"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp"
-        android:layout_below="@id/ll_email"/>
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -116,6 +172,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_navigation"
-        android:background="@color/colorPrimaryLight"/>
+        android:background="@color/colorPrimaryLight" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_navigation_admin"
+        android:background="@color/colorPrimaryLight"
+        android:visibility="gone"/>
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package ph.dlsu.s11.davidk.taste_eat.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,11 +15,21 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import ph.dlsu.s11.davidk.taste_eat.R;
 import ph.dlsu.s11.davidk.taste_eat.RecipeItemActivity;
@@ -32,6 +43,9 @@ public class RecipesLikedAdapter extends RecyclerView.Adapter<RecipesLikedAdapte
     private Context context;
 
     private OnStartDragListener listener;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String temp = "";
 
     public RecipesLikedAdapter(Context context, ArrayList<Recipes> likedRecipeList, OnStartDragListener listener) {
         this.likedRecipeList = likedRecipeList;
@@ -97,6 +111,51 @@ public class RecipesLikedAdapter extends RecyclerView.Adapter<RecipesLikedAdapte
     public boolean onItemMove(int fromPosition, int toPosition) {
         Collections.swap(likedRecipeList, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
+        String str_user_email = sharedPreferences.getString("user", null);
+
+        db.collection("likes")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG", document.getId() + " => " + document.getData());
+                                //if user liked
+                                if(str_user_email.equals(document.getString("email"))){
+                                    String strId = document.getId();
+                                    temp = "";
+                                    for(int i=0; i<likedRecipeList.size(); i++){
+                                    Log.d("TAG", i + " : "+ likedRecipeList.size());
+                                        if(i==0){
+                                            temp = temp.concat(likedRecipeList.get(i).getName());
+                                        }
+                                        else{
+                                            temp = temp.concat(","+likedRecipeList.get(i).getName());
+                                        }
+                                        Log.d("TAG",  "HERE : "+ temp);
+                                    }
+
+                                    //create new map object to send data to the db
+                                    Map<String, Object> like = new HashMap<>();
+
+                                    //add data to map
+                                    like.put("email", str_user_email);
+                                    like.put("recipes", temp);
+
+                                    //update
+                                    db.collection("likes")
+                                            .document(strId).set(like);
+                                }
+                            }
+                        } else {
+                            Log.w("TAG", "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
         return true;
     }
 

@@ -4,30 +4,39 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import ph.dlsu.s11.davidk.taste_eat.R;
 import ph.dlsu.s11.davidk.taste_eat.RecipeItemActivity;
+import ph.dlsu.s11.davidk.taste_eat.helper.ItemTouchHelperAdapter;
+import ph.dlsu.s11.davidk.taste_eat.helper.OnStartDragListener;
 import ph.dlsu.s11.davidk.taste_eat.model.Recipes;
 
-public class RecipesLikedAdapter extends RecyclerView.Adapter<RecipesLikedAdapter.RecipesLikedViewHolder>{
+public class RecipesLikedAdapter extends RecyclerView.Adapter<RecipesLikedAdapter.RecipesLikedViewHolder> implements ItemTouchHelperAdapter {
     //need to put data
     private ArrayList<Recipes> likedRecipeList;
     private Context context;
 
-    public RecipesLikedAdapter(Context context, ArrayList<Recipes> likedRecipeList) {
+    private OnStartDragListener listener;
+
+    public RecipesLikedAdapter(Context context, ArrayList<Recipes> likedRecipeList, OnStartDragListener listener) {
         this.likedRecipeList = likedRecipeList;
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
@@ -51,6 +60,13 @@ public class RecipesLikedAdapter extends RecyclerView.Adapter<RecipesLikedAdapte
         Log.d("TAG_ADAPTER", "ADAPTER" + likedRecipeList.get(position).getImage());
         Picasso.get().load(likedRecipeList.get(position).getImage()).into(holder.img_recipe);
         holder.tv_name.setText(likedRecipeList.get(position).getName());
+
+        holder.item.setOnTouchListener((view, motionEvent) -> {
+            final int action = motionEvent.getAction();
+            if(action == MotionEvent.ACTION_DOWN)
+                listener.onStartDrag(holder);
+            return false;
+        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,16 +93,31 @@ public class RecipesLikedAdapter extends RecyclerView.Adapter<RecipesLikedAdapte
 
     }
 
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(likedRecipeList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        likedRecipeList.remove(position);
+        notifyItemRemoved(position);
+    }
 
 
     protected class RecipesLikedViewHolder extends RecyclerView.ViewHolder{
         ImageView img_recipe;
         TextView tv_name;
+        CardView item;
 
         public RecipesLikedViewHolder(View itemView){
             super(itemView);
             img_recipe = itemView.findViewById(R.id.img_recipe);
             tv_name = itemView.findViewById(R.id.tv_name);
+
+            item = itemView.findViewById(R.id.item);
         }
 
     }

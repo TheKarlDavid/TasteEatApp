@@ -3,6 +3,7 @@ package ph.dlsu.s11.davidk.taste_eat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 
 import ph.dlsu.s11.davidk.taste_eat.adapter.RecipesLikedAdapter;
 import ph.dlsu.s11.davidk.taste_eat.adapter.RecipesSavedAdapter;
+import ph.dlsu.s11.davidk.taste_eat.helper.MyItemTouchHelperCallback;
 import ph.dlsu.s11.davidk.taste_eat.model.Recipes;
 
 public class LikedActivity extends AppCompatActivity {
@@ -33,6 +35,7 @@ public class LikedActivity extends AppCompatActivity {
     private ArrayList<Recipes> likedRecipeList = new ArrayList<>();
     private TextView tv_no_saved;
 
+    private ItemTouchHelper itemTouchHelper;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
@@ -89,8 +92,15 @@ public class LikedActivity extends AppCompatActivity {
 
                                                                 Log.d("TAG", "RECP BM: "+ recipe.getName() + " " + recipe.getImage() + " "+likedRecipeList);
 
-                                                                adapter = new RecipesLikedAdapter(getApplicationContext(), likedRecipeList);
+//                                                                adapter = new RecipesLikedAdapter(getApplicationContext(), likedRecipeList);
+                                                                adapter = new RecipesLikedAdapter(getApplicationContext(), likedRecipeList, viewHolder -> {
+                                                                    itemTouchHelper.startDrag(viewHolder);
+                                                                });
                                                                 rv_list.setAdapter(adapter);
+
+                                                                ItemTouchHelper.Callback callback = new MyItemTouchHelperCallback(adapter);
+                                                                itemTouchHelper = new ItemTouchHelper(callback);
+                                                                itemTouchHelper.attachToRecyclerView(rv_list);
 
                                                             }
                                                         } else {

@@ -115,6 +115,8 @@ public class RecipesActivity extends AppCompatActivity {
             });
         }
         else{
+            ll_add_recipe.setVisibility(View.GONE);
+
             navbar();
         }
 

@@ -110,16 +110,32 @@
                 android:background="@color/colorPrimaryLight"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/et_suggestion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:fontFamily="@font/poppins_regular"
-                    android:hint="Input a suggestion for a cuisine or food you want"
-                    android:layout_marginTop="8dp"
-                    android:padding="4dp"
-                    android:background="@color/colorPrimaryLight" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputSuggestion"
+                    style="@style/parent"
+                    android:layout_marginTop="8dp">
+
+                    <EditText
+                        android:id="@+id/et_suggestion"
+                        style="@style/modifiedEditText"
+                        android:hint="Suggestion for a cuisine or food you want"
+                        android:inputType="text"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textCursorDrawable="@drawable/cursor_color"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+<!--                <EditText-->
+<!--                    android:id="@+id/et_suggestion"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="20sp"-->
+<!--                    android:fontFamily="@font/poppins_regular"-->
+<!--                    android:hint="Input a suggestion for a cuisine or food you want"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:padding="4dp"-->
+<!--                    android:background="@color/colorPrimaryLight" />-->
 
 
                 <TextView

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".AddRecipeActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryLight">
+
+        <TextView
+            android:id="@+id/tv_header"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add a Recipe"
+            android:textColor="@color/colorSecondary"
+            android:fontFamily="@font/poppins_regular"
+            android:textAllCaps="true"
+            android:textSize="32dp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_header"
+        android:layout_above="@id/bottom_navigation_admin">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/colorPrimaryLight"
+                app:cardCornerRadius="10dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputName"
+                        style="@style/parent"
+                        android:padding="8dp">
+
+                        <EditText
+                            android:id="@+id/et_recipe_name"
+                            style="@style/modifiedEditText"
+                            android:fontFamily="@font/poppins_regular"
+                            android:hint="Name of dish"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="16sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputIngredients"
+                        style="@style/parent"
+                        android:padding="8dp">
+
+                        <EditText
+                            android:id="@+id/et_ingredients"
+                            style="@style/modifiedEditText"
+                            android:fontFamily="@font/poppins_regular"
+                            android:hint="Ingredients"
+                            android:inputType="text"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="16sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputInstructions"
+                        style="@style/parent"
+                        android:layout_margin="8dp">
+
+                        <EditText
+                            android:id="@+id/et_instructions"
+                            style="@style/modifiedEditText"
+                            android:fontFamily="@font/poppins_regular"
+                            android:hint="Instructions"
+                            android:inputType="text"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="16sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputCuisine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_margin="8dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actv_cuisine"
+                            style="@style/modifiedEditText"
+                            android:fontFamily="@font/poppins_regular"
+                            android:hint="Select a cuisine"
+                            android:maxLines="1"
+                            android:inputType="text"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="16sp"
+                            android:padding="16dp"
+                            android:completionHint="Select a cuisine"
+                            android:completionThreshold="1"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputMeal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_margin="8dp">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actv_meal"
+                            style="@style/modifiedEditText"
+                            android:fontFamily="@font/poppins_regular"
+                            android:hint="Select a meal"
+                            android:maxLines="1"
+                            android:inputType="text"
+                            android:textCursorDrawable="@drawable/cursor_color"
+                            android:textSize="16sp"
+                            android:padding="16dp"
+                            android:completionHint="Select a meal"
+                            android:completionThreshold="1"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tv_error_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Invalid Image: no image placed"
+                android:textColor="@color/design_default_color_error"
+                android:padding="4dp"
+                android:gravity="center"
+                android:fontFamily="@font/poppins_regular"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_below="@+id/cardView"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/img_btn_recipe"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:src="@drawable/img_placeholder"
+                android:layout_below="@+id/tv_error_image"/>
+
+            <TextView
+                android:id="@+id/tv_add_recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="55dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="55dp"
+                android:background="@drawable/primary_fill__rounded_color"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="Add new recipe"
+                android:layout_below="@+id/img_btn_recipe"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryLight"
+        app:menu="@menu/bottom_navigation_admin"/>
+
+</RelativeLayout>

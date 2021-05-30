@@ -14,16 +14,37 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 public class AccountActivity extends AppCompatActivity {
 
     private TextView tv_header, tv_name, tv_email, tv_suggestion, tv_logout;
     private EditText et_suggestion;
+    private TextInputLayout textInputSuggestion;
     private LinearLayout ll_suggestion;
     private ImageView img_user;
-    private String str_user_email, str_user_name, str_role;
+    private String str_user_email, str_user_name, str_role, str_suggestion;
+
+    private Date date = new Date();
+    private Locale philippineLocale = new Locale.Builder().setLanguage("en").setRegion("PH").build();
+
+    // initialize cloud firestore
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +76,7 @@ public class AccountActivity extends AppCompatActivity {
         et_suggestion = findViewById(R.id.et_suggestion);
         ll_suggestion = findViewById(R.id.ll_suggestion);
         img_user = findViewById(R.id.img_user);
+        textInputSuggestion = findViewById(R.id.textInputSuggestion);
 
         SharedPreferences sp = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
         str_user_email = sp.getString("user", "default");
@@ -72,6 +94,54 @@ public class AccountActivity extends AppCompatActivity {
         tv_name.setText(str_user_name);
         tv_email.setText(str_user_email);
 
+        tv_suggestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get input suggestion
+                str_suggestion = et_suggestion.getText().toString();
+
+                if(validateSuggestion()){
+                    Log.d("TAG", "CLICK HERE" + getDate(date, philippineLocale));
+
+                    //create new map object to send data to the db
+                    Map<String, Object> suggestion = new HashMap<>();
+
+                    //add data to map
+                    suggestion.put("email", str_user_email);
+                    suggestion.put("suggestion", str_suggestion);
+                    suggestion.put("date", getDate(date, philippineLocale));
+
+                    //add new document with generated ID
+                    db.collection("suggestions")
+                            .add(suggestion)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    //Execute when data is successfully inserted to database
+                                    Log.d("tag", "inserted success");
+                                    Toast.makeText(getApplicationContext(), "Suggestion successfully sent", Toast.LENGTH_SHORT).show();
+
+//                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+//                                    startActivity(intent);
+//                                    finish();
+
+                                    finish();
+                                    startActivity(getIntent());
+
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    //Execute when data is not successfully inserted to database
+                                    Log.d("tag", "error insert fail");
+                                }
+                            });
+                }
+
+            }
+        });
+
         tv_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +157,24 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean validateSuggestion() {
+
+        if (str_suggestion.isEmpty() || str_suggestion.equals(null) || str_suggestion.equals(" ")) {
+            textInputSuggestion.setError("Please enter a suggestion");
+            return false;
+        }
+        else {
+            textInputSuggestion.setError(null);
+            return true;
+        }
+    }
+
+    private String getDate(Date date, Locale locale) {
+        DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy hh:mm aaa", locale);
+        formatter.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+        return formatter.format(date);
     }
 
     private void navbar(){
@@ -155,4 +243,5 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
     }
+
 }

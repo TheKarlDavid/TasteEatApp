@@ -34,9 +34,10 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
+                android:id="@+id/img_add_cuisine"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:baselineAligned="false"
@@ -44,6 +45,7 @@
                 app:tint="@color/colorSecondary" />
 
             <TextView
+                android:id="@+id/tv_add_cuisine"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/poppins_regular"

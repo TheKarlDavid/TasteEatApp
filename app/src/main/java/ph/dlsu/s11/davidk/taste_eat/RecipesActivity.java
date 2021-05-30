@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.BroadcastReceiver;
@@ -18,6 +20,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.badge.BadgeDrawable;
@@ -40,6 +44,10 @@ public class RecipesActivity extends AppCompatActivity {
     private LunchFragment lunchFragment;
     private DinnerFragment dinnerFragment;
 
+    private LinearLayout ll_add_recipe;
+    private ImageView img_add_recipe;
+    private TextView tv_add_recipe;
+
     private String str_cuisine_name, str_role;
 
     @Override
@@ -47,21 +55,19 @@ public class RecipesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes);
 
-        SharedPreferences sp = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
-        str_role = sp.getString("role", "default");
-
-        if(str_role.equalsIgnoreCase("admin")){
-            navbarAdmin();
-        }
-        else{
-            navbar();
-        }
-
         init();
 
     }
 
     private void init(){
+
+        SharedPreferences sp = getSharedPreferences("APP_USER", Context.MODE_PRIVATE);
+        str_role = sp.getString("role", "default");
+
+        ll_add_recipe = findViewById(R.id.ll_add_recipe);
+        img_add_recipe = findViewById(R.id.img_add_recipe);
+        tv_add_recipe = findViewById(R.id.tv_add_recipe);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -89,6 +95,28 @@ public class RecipesActivity extends AppCompatActivity {
         viewPagerAdapter.addFragment(dinnerFragment, "dinner");
 
         viewPager.setAdapter(viewPagerAdapter);
+
+        if(str_role.equalsIgnoreCase("admin")){
+            ll_add_recipe.setVisibility(View.VISIBLE);
+
+            navbarAdmin();
+
+            ll_add_recipe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("TAG", "CLICK ADD RECIPE");
+                    img_add_recipe.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    tv_add_recipe.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+                    Intent intent = new Intent(getApplicationContext(), AddRecipeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
+        else{
+            navbar();
+        }
 
     }
 

@@ -2,10 +2,18 @@ package ph.dlsu.s11.davidk.taste_eat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -22,6 +30,16 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import ph.dlsu.s11.davidk.taste_eat.model.Recipes;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox cb_remember;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor EDITOR;
+
+    // initialize cloud firestore
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +84,6 @@ public class MainActivity extends AppCompatActivity {
         textInputPassword = findViewById(R.id.textInputPassword);
         cb_remember = findViewById(R.id.cb_remember);
 
-        // initialize cloud firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         tv_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                                             EDITOR.putString("user", document.getString("email"));
                                             EDITOR.putString("name", document.getString("first_name") + " " + document.getString("last_name") );
                                             EDITOR.putString("role", document.getString("role"));
+                                            EDITOR.putString("notified", document.getString("false"));
                                             EDITOR.apply();
 
                                             if(cb_remember.isChecked()){ //check is user wants to remember log in
@@ -138,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
 
     private boolean validateEmail() {
         String str_email = et_email.getText().toString();

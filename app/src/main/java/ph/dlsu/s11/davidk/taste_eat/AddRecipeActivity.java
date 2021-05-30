@@ -32,10 +32,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class AddRecipeActivity extends AppCompatActivity {
 
@@ -55,6 +60,9 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
     private StorageReference storageReference;
+
+    private Date date = new Date();
+    private Locale philippineLocale = new Locale.Builder().setLanguage("en").setRegion("PH").build();
 
     // initialize cloud firestore
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -164,6 +172,23 @@ public class AddRecipeActivity extends AppCompatActivity {
                                                     Log.d("TAG", "error insert fail");
                                                 }
                                             });
+
+                                    db.collection("notifications").document("VvBwX3xhxfNFr1Npkhbj")
+                                            .update("name", str_name,
+                                                    "cuisine", str_ingredients,
+                                                    "date", getDate(date, philippineLocale))
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("TAG", "DocumentSnapshot successfully updated!");
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w("TAG", "Error updating document", e);
+                                                }
+                                            });
                                 }
                             });
 
@@ -218,6 +243,12 @@ public class AddRecipeActivity extends AppCompatActivity {
             imageUri = data.getData();
             img_btn_recipe.setImageURI(imageUri);
         }
+    }
+
+    private String getDate(Date date, Locale locale) {
+        DateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy", locale);
+        formatter.setTimeZone(TimeZone.getTimeZone("Asia/Manila"));
+        return formatter.format(date);
     }
 
     private boolean validateName() {

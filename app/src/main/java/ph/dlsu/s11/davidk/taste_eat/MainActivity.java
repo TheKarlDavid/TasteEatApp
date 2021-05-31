@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                                             EDITOR.putString("user", document.getString("email"));
                                             EDITOR.putString("name", document.getString("first_name") + " " + document.getString("last_name") );
                                             EDITOR.putString("role", document.getString("role"));
-                                            EDITOR.putString("notified", document.getString("false"));
+                                            EDITOR.putString("notified", "false");
                                             EDITOR.apply();
 
                                             if(cb_remember.isChecked()){ //check is user wants to remember log in

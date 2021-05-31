@@ -159,6 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 EDITOR.putString("user", et_email.getText().toString());
                                                 EDITOR.putString("name", et_first_name.getText().toString() + " " + et_last_name.getText().toString());
                                                 EDITOR.putString("role", "user");
+                                                EDITOR.putString("notified", "false");
                                                 EDITOR.apply();
 
                                                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);

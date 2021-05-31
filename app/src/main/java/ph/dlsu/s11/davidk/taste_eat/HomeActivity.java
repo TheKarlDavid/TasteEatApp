@@ -157,9 +157,9 @@ public class HomeActivity extends AppCompatActivity {
 
                                 if(document.getString("date").equalsIgnoreCase(getDate(date, philippineLocale))
                                         && str_role.equalsIgnoreCase("user")
-//                                        && str_notified.equalsIgnoreCase("false")
+                                        && str_notified.equalsIgnoreCase("false")
                                 ){
-
+//                                    Log.d("TAG", "NOTIFIED: "+str_notified);
                                     EDITOR = sharedPreferences.edit();
                                     EDITOR.putString("notified", "true");
                                     EDITOR.apply();
